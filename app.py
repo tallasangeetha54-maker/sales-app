@@ -4,6 +4,7 @@ from prophet import Prophet
 import matplotlib.pyplot as plt
 
 st.title("📊 Sales Forecasting App")
+st.markdown("## 📊 Walmart Sales Forecast Dashboard")
 st.write("App is running...")
 
 file = st.file_uploader("Upload your Walmart Sales CSV", type=["csv"])
@@ -17,6 +18,8 @@ if file is not None:
     df = df[['Date', 'Weekly_Sales']]
     df = df.groupby('Date').sum().reset_index()
     df = df.rename(columns={'Date': 'ds', 'Weekly_Sales': 'y'})
+    st.write("Total Sales:", df['y'].sum())
+    st.write("Highest Sales:", df['y'].max())
 
     days = st.slider("Select number of days to forecast", 30, 180)
 
@@ -25,6 +28,7 @@ if file is not None:
 
     future = model.make_future_dataframe(periods=days)
     forecast = model.predict(future)
+    st.success("Forecast generated successfully!")
 
     st.subheader("📈 Forecast Graph")
     fig1 = model.plot(forecast)
